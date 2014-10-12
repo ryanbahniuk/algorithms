@@ -16,8 +16,8 @@ class Heap
 		@heap.delete_at(0)
 
 		unless @heap.empty?
-			last_element = @heap.pop
-			@heap.insert(0, last_element)
+			last = @heap.pop
+			@heap.insert(0, last)
 			down_heap
 		end
 	end
@@ -40,7 +40,7 @@ class Heap
 	end
 
 	def down_heap(index = 0)
-		if incorrect?(index)
+		if incorrect?(index) && has_children?(index)
 			big_child_index = index_of_greatest_child(index)
 			swap(index, big_child_index)
 			down_heap(big_child_index)
@@ -59,10 +59,14 @@ class Heap
 		children
 	end
 
+	def has_children?(index)
+		children = get_children(index)
+		!children.empty?
+	end
+
 	def index_of_greatest_child(index)
 		children = get_children(index)
-		index = children.sort_by {|index, child| child }.reverse.first.first
-		index - 1
+		children.sort_by {|index, child| child }.reverse.first.first
 	end
 
 	def swap(first_index, second_index)
